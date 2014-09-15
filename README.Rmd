@@ -29,7 +29,7 @@ The brief is:
 
 # Downloading and examining data
 
-```{r download}
+```{r download,eval=FALSE}
 data_url <- 'https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip'
 zip_file <- 'UCI HAR Dataset.zip'
 zip_subdir <- "UCI HAR Dataset"
@@ -103,7 +103,7 @@ In ```load_metadata``` these two are loaded.  We also explicitly find the column
 and standard deviations, both as a logical vector for subsetting (```cols_to_keep```) and as character
 array (```col_names_to_keep```).  The various elements of metadata are returned in a list.
 
-```{r metadata}
+```{r metadata,eval=FALSE}
 library(stringr)
 
 # Commun function for loading the activity and features files that describe the activity names and the columns in the data sets
@@ -153,7 +153,7 @@ This is then subsetted to the columns that are mean or standard devistions, usin
 metadata created above.  This data is then augmented with the subject factor and activity factor, 
 together with an ```is_training_data``` column (currently unused).
 
-```{r data_load}
+```{r data_load,eval=FALSE}
 
 # Load data from test or train.
 # Pass in metadata from "load_metadata" to have propper comun names and activities as factors
@@ -192,7 +192,7 @@ load_data <- function(test_or_train,meta,nrows=-1) {
 
 Load meta, test and training data, and combine the latter two.
 
-```{r load_all}
+```{r load_all,eval=FALSE}
 
 setwd("UCI HAR Dataset")
 
@@ -211,7 +211,7 @@ setwd("..")
 Calculating the averages for all columns, by subject and activity, is trivial using the ```recast``` function from the 
 [reshape2](http://cran.r-project.org/web/packages/reshape2/index.html) package.
 
-```{r averages}
+```{r averages,eval=FALSE}
 require(reshape2)
 averages <- recast(combined[,-3] # need to avoid my "is_training_data" column
                    , subject + activity ~ ..., mean)
@@ -221,8 +221,44 @@ write.table(averages, "averages.txt", row.name=FALSE)
 The file averages.txt details the averages of the means and standard deviations, for each subject and 
 activity.  The first two columns are ``subject'' and ``activity'', then followed by a further 66 columns with the averages for the following factors:
 
-```{r copybook}
+```{r copybook, eval=FALSE}
 meta$col_names_to_keep
+```
+
+```
+ [1] "tBodyAcc-mean()-X"           "tBodyAcc-mean()-Y"          
+ [3] "tBodyAcc-mean()-Z"           "tBodyAcc-std()-X"           
+ [5] "tBodyAcc-std()-Y"            "tBodyAcc-std()-Z"           
+ [7] "tGravityAcc-mean()-X"        "tGravityAcc-mean()-Y"       
+ [9] "tGravityAcc-mean()-Z"        "tGravityAcc-std()-X"        
+[11] "tGravityAcc-std()-Y"         "tGravityAcc-std()-Z"        
+[13] "tBodyAccJerk-mean()-X"       "tBodyAccJerk-mean()-Y"      
+[15] "tBodyAccJerk-mean()-Z"       "tBodyAccJerk-std()-X"       
+[17] "tBodyAccJerk-std()-Y"        "tBodyAccJerk-std()-Z"       
+[19] "tBodyGyro-mean()-X"          "tBodyGyro-mean()-Y"         
+[21] "tBodyGyro-mean()-Z"          "tBodyGyro-std()-X"          
+[23] "tBodyGyro-std()-Y"           "tBodyGyro-std()-Z"          
+[25] "tBodyGyroJerk-mean()-X"      "tBodyGyroJerk-mean()-Y"     
+[27] "tBodyGyroJerk-mean()-Z"      "tBodyGyroJerk-std()-X"      
+[29] "tBodyGyroJerk-std()-Y"       "tBodyGyroJerk-std()-Z"      
+[31] "tBodyAccMag-mean()"          "tBodyAccMag-std()"          
+[33] "tGravityAccMag-mean()"       "tGravityAccMag-std()"       
+[35] "tBodyAccJerkMag-mean()"      "tBodyAccJerkMag-std()"      
+[37] "tBodyGyroMag-mean()"         "tBodyGyroMag-std()"         
+[39] "tBodyGyroJerkMag-mean()"     "tBodyGyroJerkMag-std()"     
+[41] "fBodyAcc-mean()-X"           "fBodyAcc-mean()-Y"          
+[43] "fBodyAcc-mean()-Z"           "fBodyAcc-std()-X"           
+[45] "fBodyAcc-std()-Y"            "fBodyAcc-std()-Z"           
+[47] "fBodyAccJerk-mean()-X"       "fBodyAccJerk-mean()-Y"      
+[49] "fBodyAccJerk-mean()-Z"       "fBodyAccJerk-std()-X"       
+[51] "fBodyAccJerk-std()-Y"        "fBodyAccJerk-std()-Z"       
+[53] "fBodyGyro-mean()-X"          "fBodyGyro-mean()-Y"         
+[55] "fBodyGyro-mean()-Z"          "fBodyGyro-std()-X"          
+[57] "fBodyGyro-std()-Y"           "fBodyGyro-std()-Z"          
+[59] "fBodyAccMag-mean()"          "fBodyAccMag-std()"          
+[61] "fBodyBodyAccJerkMag-mean()"  "fBodyBodyAccJerkMag-std()"  
+[63] "fBodyBodyGyroMag-mean()"     "fBodyBodyGyroMag-std()"     
+[65] "fBodyBodyGyroJerkMag-mean()" "fBodyBodyGyroJerkMag-std()" 
 ```
 
 # Production Notes
