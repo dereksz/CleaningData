@@ -90,6 +90,27 @@ in this repository. See:
 Merges training and test data
 =============================
 
+The basic approach is to load the two-column `activity_labels.txt` and
+`features.txt` tables into a metadata structure so that it is available
+while loading each of the test and training data sets, then load and
+augment the test and training data. And finally combine and anlyse them
+per the assignemtn brief.
+
+Shared Metadata Functions
+-------------------------
+
+The shared function `load_meatdata_1` loads a two-column table, checks
+that the first column is just a sequence number, and hands back the
+second column as an atomic vector. The vecor will be a factor vector if
+the items are unique (which `activity_labels.txt` is), or a character
+vector if they are not (which `features.txt` is).
+
+In `load_metadata` these two are loaded. We also explicitly find the
+columns that descibe means and standard deviations, both as a logical
+vector for subsetting (`cols_to_keep`) and as character array
+(`col_names_to_keep`). The various elements of metadata are returned in
+a list.
+
     library(stringr)
 
     # Commun function for loading the activity and features files that describe the activity names and the columns in the data sets
@@ -129,6 +150,19 @@ Merges training and test data
             , subjects = factor(1:30))
     }
 
+Loading Core Data Function
+--------------------------
+
+The data itself is loaded via a utility function that can load either
+the `test` or `train` data.
+
+The core numbers are loaded from the 'X\_' file, with the explicit set
+of column names being supplied.  
+This is then subsetted to the columns that are mean or standard
+devistions, using the `cols_to_keep` metadata created above. This data
+is then augmented with the subject factor and activity factor, together
+with an `is_training_data` column (currently unused).
+
     # Load data from test or train.
     # Pass in metadata from "load_metadata" to have propper comun names and activities as factors
     # Allow an 'nrows' for sub-setting and making for quicker debugging
@@ -161,6 +195,10 @@ Merges training and test data
       result
     }
 
+Bringing it all together
+------------------------
+
+Load meta, test and training data, and combine the latter two.
 
     setwd("UCI HAR Dataset")
 
@@ -172,6 +210,14 @@ Merges training and test data
     rm(test,train)
 
     setwd("..")
+
+Calculating Averages
+--------------------
+
+Calculating the averages for all columns, by subject and activity, is
+trivial using the `recast` function from the
+[reshape2](http://cran.r-project.org/web/packages/reshape2/index.html)
+package.
 
     require(reshape2)
 
@@ -186,10 +232,10 @@ Merges training and test data
 
 The file averages.txt details the averages of the means and standard
 deviations, for each subject and activity. The first two columns are
-`subject'' and`activity'', then followed by a further 67 columns with
+`subject'' and`activity'', then followed by a further 66 columns with
 the averages for the following factors:
 
-    print(meta$col_names_to_keep)
+    meta$col_names_to_keep
 
     ##  [1] "tBodyAcc-mean()-X"           "tBodyAcc-mean()-Y"          
     ##  [3] "tBodyAcc-mean()-Z"           "tBodyAcc-std()-X"           

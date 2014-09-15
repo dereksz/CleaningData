@@ -11,7 +11,7 @@ if (!file.exists(zip_subdir)) {
 }
 
 
-## ----data_load-----------------------------------------------------------
+## ----metadata------------------------------------------------------------
 library(stringr)
 
 # Commun function for loading the activity and features files that describe the activity names and the columns in the data sets
@@ -51,6 +51,9 @@ load_metadata <- function() {
         , subjects = factor(1:30))
 }
 
+
+## ----data_load-----------------------------------------------------------
+
 # Load data from test or train.
 # Pass in metadata from "load_metadata" to have propper comun names and activities as factors
 # Allow an 'nrows' for sub-setting and making for quicker debugging
@@ -84,6 +87,8 @@ load_data <- function(test_or_train,meta,nrows=-1) {
 }
 
 
+## ----load_all------------------------------------------------------------
+
 setwd("UCI HAR Dataset")
 
 meta <- load_metadata()
@@ -104,6 +109,6 @@ write.table(averages, "averages.txt", row.name=FALSE)
 
 
 ## ----copybook------------------------------------------------------------
-print(meta$col_names_to_keep)
+meta$col_names_to_keep
 
 
